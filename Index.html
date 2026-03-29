@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Haii Hannah 🌸</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Georgia, serif; overflow-x: hidden; }
+
+    /* ── Home Page ── */
+    #home-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #ffe4f3 0%, #ffd6f0 40%, #f9c6e8 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .floating-emoji {
+      position: absolute;
+      pointer-events: none;
+    }
+    @keyframes float0 { 0%,100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-18px) rotate(8deg); } }
+    @keyframes float1 { 0%,100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-12px) rotate(-6deg); } }
+    @keyframes float2 { 0%,100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-22px) rotate(10deg); } }
+
+    .home-card {
+      text-align: center;
+      z-index: 10;
+      background: rgba(255,255,255,0.65);
+      border-radius: 24px;
+      padding: 48px 56px;
+      box-shadow: 0 8px 40px rgba(255,100,180,0.18);
+      border: 2px solid rgba(255,150,200,0.3);
+      backdrop-filter: blur(8px);
+      max-width: 480px;
+      width: 90%;
+    }
+    .home-card h1 {
+      font-size: 2.8rem;
+      font-weight: bold;
+      color: #d63384;
+      margin-bottom: 12px;
+      text-shadow: 1px 2px 8px rgba(214,51,132,0.15);
+      letter-spacing: -0.5px;
+    }
+    .home-card p {
+      font-size: 1.25rem;
+      color: #9b3068;
+      margin-bottom: 36px;
+      line-height: 1.5;
+    }
+    .btn-row { display: flex; gap: 20px; justify-content: center; align-items: center; }
+
+    .btn-yes {
+      background: linear-gradient(135deg, #ff6eb4, #d63384);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 14px 40px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(214,51,132,0.35);
+      transition: transform 0.15s, box-shadow 0.15s;
+      font-family: Georgia, serif;
+    }
+    .btn-yes:hover {
+      transform: scale(1.07);
+      box-shadow: 0 6px 24px rgba(214,51,132,0.5);
+    }
+
+    .btn-no {
+      background: rgba(255,255,255,0.88);
+      color: #9b3068;
+      border: 2px solid #f0a0c8;
+      border-radius: 50px;
+      padding: 13px 0;
+      width: 148px;
+      font-size: 1.05rem;
+      font-weight: bold;
+      cursor: pointer;
+      white-space: nowrap;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(214,51,132,0.18);
+      user-select: none;
+      font-family: Georgia, serif;
+      transition: font-size 0.1s;
+    }
+    .btn-no.escaped {
+      position: fixed;
+      z-index: 500;
+      width: 148px;
+    }
+
+    .footer-credit {
+      position: fixed;
+      bottom: 16px;
+      left: 0; right: 0;
+      text-align: center;
+      color: #c0608a;
+      font-size: 0.85rem;
+      opacity: 0.75;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    /* ── Modal ── */
+    #modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(4px);
+    }
+    #modal-overlay.open { display: flex; }
+
+    .letter-card {
+      background: linear-gradient(160deg, #fff9fb 0%, #fff0f7 100%);
+      border-radius: 20px;
+      padding: 40px 44px;
+      max-width: 520px;
+      width: 92%;
+      box-shadow: 0 20px 60px rgba(214,51,132,0.25), 0 2px 12px rgba(0,0,0,0.1);
+      border: 2px solid #f9b8d8;
+      position: relative;
+      z-index: 200;
+      max-height: 88vh;
+      overflow-y: auto;
+    }
+    .letter-card-header { text-align: center; margin-bottom: 20px; }
+    .letter-card-header h2 {
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: #d63384;
+      margin: 8px 0 0 0;
+    }
+    .letter-body {
+      background: rgba(255,255,255,0.7);
+      border-radius: 12px;
+      padding: 24px 28px;
+      line-height: 2;
+      color: #6b2050;
+      font-size: 1.05rem;
+      border-left: 4px solid #f9b8d8;
+      margin-bottom: 28px;
+      box-shadow: inset 0 2px 8px rgba(255,180,210,0.15);
+    }
+    .letter-body p { margin: 0 0 14px 0; }
+    .letter-body p:last-child { margin: 0; font-weight: bold; font-size: 1.15rem; color: #d63384; text-align: center; }
+    .letter-body strong { color: #d63384; }
+
+    .btn-yes-modal {
+      background: linear-gradient(135deg, #ff6eb4, #d63384);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 13px 36px;
+      font-size: 1.05rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(214,51,132,0.4);
+      transition: transform 0.15s;
+      font-family: Georgia, serif;
+    }
+    .btn-yes-modal:hover { transform: scale(1.08); }
+
+    .sad-img {
+      position: fixed;
+      width: 130px;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 12px;
+      z-index: 99;
+      pointer-events: none;
+      border: 3px solid #ff6eb4;
+      box-shadow: 0 4px 16px rgba(214,51,132,0.4);
+      animation: sadPop 0.3s ease-out;
+    }
+    @keyframes sadPop {
+      0% { transform: scale(0.4) rotate(-12deg); opacity: 0; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    /* ── Celebration Page ── */
+    #celebration-page {
+      display: none;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ffe4f3 0%, #ffd6f0 40%, #ffd700 100%);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    #celebration-page.open { display: flex; }
+
+    .confetti-piece {
+      position: fixed;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .celebration-card {
+      text-align: center;
+      z-index: 10;
+      background: rgba(255,255,255,0.88);
+      border-radius: 28px;
+      padding: 52px 60px;
+      max-width: 520px;
+      width: 90%;
+      box-shadow: 0 12px 60px rgba(214,51,132,0.3), 0 2px 16px rgba(0,0,0,0.08);
+      border: 3px solid #ffb8d8;
+      backdrop-filter: blur(8px);
+      animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .celebration-card h1 {
+      font-size: 2.4rem;
+      font-weight: bold;
+      color: #d63384;
+      margin-bottom: 16px;
+      text-shadow: 2px 3px 12px rgba(214,51,132,0.2);
+      line-height: 1.2;
+    }
+    .celebration-card p { font-size: 1.15rem; color: #9b3068; margin-bottom: 20px; line-height: 1.7; }
+    .celebration-card strong { color: #d63384; }
+    .quote-box {
+      background: linear-gradient(135deg, #ffe4f3, #ffd6f0);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      border: 2px solid #f9b8d8;
+    }
+    .quote-box p { font-size: 1.1rem; color: #6b2050; margin: 0; font-style: italic; line-height: 1.6; }
+    .quote-box small { font-size: 0.85rem; color: #b06090; display: block; margin-top: 6px; }
+
+    @keyframes popIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-16px); }
+    }
+    @keyframes spinHeart {
+      0%, 100% { transform: scale(1) rotate(-10deg); }
+      50% { transform: scale(1.3) rotate(10deg); }
+    }
+    .bounce { animation: bounce 1s ease-in-out infinite; display: inline-block; }
+    .spin-heart { animation: spinHeart 2s ease-in-out infinite; display: inline-block; font-size: 2.5rem; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ HOME PAGE ═══════════════════════════ -->
+<div id="home-page">
+  <div class="home-card">
+    <div style="font-size:3rem;margin-bottom:8px">💖</div>
+    <h1>Haii Hannah 🌸</h1>
+    <p>Do you wanna know a fun fact? 🤭</p>
+    <div class="btn-row">
+      <button class="btn-yes" onclick="openModal()">Yes!! 💕</button>
+      <button class="btn-no" id="no-btn-home" onmouseenter="runAway(this, 'home')">No 😒</button>
+    </div>
+  </div>
+  <p class="footer-credit">created by yash 💕</p>
+</div>
+
+<!-- ═══════════════════════════ MODAL ═══════════════════════════ -->
+<div id="modal-overlay">
+  <div class="letter-card">
+    <div class="letter-card-header">
+      <span style="font-size:2rem">💌</span>
+      <h2>A Little Confession...</h2>
+    </div>
+    <div class="letter-body">
+      <p>Dear Hannah,</p>
+      <p>I've been holding this in for a while now, and I think it's finally time I was honest with you. 🌸</p>
+      <p>The fun fact is... <strong>I really like you.</strong> Like, a lot. You make everything brighter just by being you. 💕</p>
+      <p>Your smile, your laugh, the way you are... it all just makes my heart do something ridiculous every single time. 😊</p>
+      <p>So here I am, risking it all... just to ask you one thing: 🎵</p>
+      <p>Will you be mine? 💖</p>
+    </div>
+    <div class="btn-row">
+      <button class="btn-yes-modal" onclick="celebrate()">Yes, of course!! 💖</button>
+      <button class="btn-no" id="no-btn-modal" onmouseenter="runAway(this, 'modal')">No... 😔</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ CELEBRATION PAGE ═══════════════════════════ -->
+<div id="celebration-page">
+  <div class="celebration-card">
+    <div class="bounce" style="font-size:4rem;margin-bottom:12px">🎉</div>
+    <h1>She said YES!! 💖</h1>
+    <div style="font-size:2rem;margin-bottom:16px;letter-spacing:4px">💕 🌸 ✨ 🥰 ✨ 🌸 💕</div>
+    <p>
+      This is the beginning of something absolutely <strong>beautiful</strong>. 🌺<br/>
+      You make my world so much better, Hannah.<br/>
+      I'm so happy you said yes!! 🎊
+    </p>
+    <div class="quote-box">
+      <p>"And I'm gonna risk it all for you... 🎵"</p>
+      <small>— Bruno Mars, Risk It All</small>
+    </div>
+    <div class="spin-heart">💗</div>
+  </div>
+</div>
+
+<script>
+  // ── Audio ──
+  const audio = new Audio('Music.mp3');
+  audio.loop = true;
+  audio.volume = 0.4;
+  let audioStarted = false;
+  document.addEventListener('click', () => {
+    if (!audioStarted) { audioStarted = true; audio.play().catch(() => {}); }
+  }, { once: true });
+
+  // ── Floating hearts ──
+  const emojis = ['💕','🌸','✨'];
+  const homePage = document.getElementById('home-page');
+  for (let i = 0; i < 12; i++) {
+    const el = document.createElement('div');
+    el.className = 'floating-emoji';
+    el.textContent = emojis[i % 3];
+    el.style.left = `${(i * 8.5) % 100}%`;
+    el.style.top  = `${(i * 13)  % 100}%`;
+    el.style.fontSize = `${1.2 + (i % 3) * 0.4}rem`;
+    el.style.opacity  = `${0.18 + (i % 4) * 0.06}`;
+    el.style.animation = `float${i % 3} ${3 + (i % 4)}s ease-in-out infinite`;
+    homePage.appendChild(el);
+  }
+
+  // ── Run-away button ──
+  const BTN_W = 148, BTN_H = 50, MARGIN = 20;
+  const homeNoLabels  = ['Nope! 😏','Never! 😜','Try again 😝','Nuhh uh 🙅','Nooooo 😂'];
+  const modalNoLabels = ['Noooo 😭','Please... 🥺','Come back!! 💔','Why?? 😢',"I'm crying... 😭",'My heart... 💔','Say yes!! 🙏'];
+  const escapeCounts  = { home: 0, modal: 0 };
+
+  function pickRandom() {
+    return {
+      x: MARGIN + Math.random() * (window.innerWidth  - BTN_W - MARGIN * 2),
+      y: MARGIN + Math.random() * (window.innerHeight - BTN_H - MARGIN * 2),
+    };
+  }
+
+  function runAway(btn, which) {
+    const labels = which === 'home' ? homeNoLabels : modalNoLabels;
+    escapeCounts[which]++;
+    const count = escapeCounts[which];
+
+    if (!btn.classList.contains('escaped')) {
+      const rect = btn.getBoundingClientRect();
+      btn.classList.add('escaped');
+      btn.style.left = rect.left + 'px';
+      btn.style.top  = rect.top  + 'px';
+      requestAnimationFrame(() => {
+        const pos = pickRandom();
+        btn.style.left = pos.x + 'px';
+        btn.style.top  = pos.y + 'px';
+      });
+    } else {
+      const pos = pickRandom();
+      btn.style.left = pos.x + 'px';
+      btn.style.top  = pos.y + 'px';
+    }
+
+    btn.textContent = labels[(count - 1) % labels.length];
+    const newSize = Math.max(0.65, 1.05 - count * 0.05);
+    btn.style.fontSize = newSize + 'rem';
+
+    // Sad GIFs in modal
+    if (which === 'modal') spawnSadImage(count);
+  }
+
+  // ── Sad GIFs ──
+  const SAD_IMAGES = [
+    'https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif',
+    'https://media.giphy.com/media/d2lcHJTG5Tscg/giphy.gif',
+    'https://media.giphy.com/media/OPU6wzx8JrHna/giphy.gif',
+    'https://media.giphy.com/media/evWv7iSaHNM7S/giphy.gif',
+    'https://media.giphy.com/media/3o7TKRwpns23QMNNiE/giphy.gif',
+  ];
+  const sadImgEls = [];
+
+  function spawnSadImage(count) {
+    if (sadImgEls.length >= 8) {
+      const old = sadImgEls.shift();
+      old.remove();
+    }
+    const img = document.createElement('img');
+    img.src = SAD_IMAGES[(count - 1) % SAD_IMAGES.length];
+    img.alt = 'sad';
+    img.className = 'sad-img';
+    img.style.left = (20 + Math.random() * (window.innerWidth  - 180)) + 'px';
+    img.style.top  = (20 + Math.random() * (window.innerHeight - 180)) + 'px';
+    document.body.appendChild(img);
+    sadImgEls.push(img);
+  }
+
+  // ── Modal ──
+  function openModal() {
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+
+  // ── Celebration ──
+  function celebrate() {
+    document.getElementById('home-page').style.display = 'none';
+    document.getElementById('modal-overlay').classList.remove('open');
+    // Clean up escaped buttons and sad GIFs
+    sadImgEls.forEach(el => el.remove());
+    sadImgEls.length = 0;
+    document.getElementById('celebration-page').classList.add('open');
+    startConfetti();
+  }
+
+  // ── Confetti ──
+  const COLORS = ['#ff6eb4','#d63384','#ffd700','#ff4500','#00cfff','#7fff00','#ff69b4','#da70d6','#ffa500','#00fa9a'];
+  const confettiPieces = [];
+  let confettiRAF;
+
+  function makeConfetti() {
+    const shape = ['rect','circle','heart'][Math.floor(Math.random() * 3)];
+    const size  = 8 + Math.random() * 12;
+    const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    if (shape === 'heart') {
+      el.textContent = '❤';
+      el.style.fontSize = size + 'px';
+      el.style.color = color;
+      el.style.background = 'transparent';
+      el.style.width = size + 'px';
+      el.style.height = size + 'px';
+    } else {
+      el.style.width  = (shape === 'rect' ? size * 1.8 : size) + 'px';
+      el.style.height = size + 'px';
+      el.style.background = color;
+      el.style.borderRadius = shape === 'circle' ? '50%' : '2px';
+    }
+    document.getElementById('celebration-page').appendChild(el);
+    return {
+      el,
+      x: Math.random() * window.innerWidth,
+      y: -20,
+      speedX: (Math.random() - 0.5) * 3,
+      speedY: 2 + Math.random() * 3,
+      rotation: Math.random() * 360,
+      rotSpeed: (Math.random() - 0.5) * 6,
+    };
+  }
+
+  function startConfetti() {
+    for (let i = 0; i < 60; i++) confettiPieces.push(makeConfetti());
+    let lastSpawn = 0;
+
+    function animate(ts) {
+      if (ts - lastSpawn > 200) {
+        lastSpawn = ts;
+        for (let i = 0; i < 8; i++) confettiPieces.push(makeConfetti());
+      }
+      for (let i = confettiPieces.length - 1; i >= 0; i--) {
+        const c = confettiPieces[i];
+        c.x += c.speedX;
+        c.y += c.speedY;
+        c.rotation += c.rotSpeed;
+        c.el.style.left = c.x + 'px';
+        c.el.style.top  = c.y + 'px';
+        c.el.style.transform = `rotate(${c.rotation}deg)`;
+        if (c.y > window.innerHeight + 40) {
+          c.el.remove();
+          confettiPieces.splice(i, 1);
+        }
+      }
+      confettiRAF = requestAnimationFrame(animate);
+    }
+    confettiRAF = requestAnimationFrame(animate);
+  }
+</script>
+</body>
+</html>
